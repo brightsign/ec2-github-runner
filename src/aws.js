@@ -12,7 +12,7 @@ function buildUserDataScript(githubRegistrationToken, label) {
       `cd "${config.input.runnerHomeDir}"`,
       'export RUNNER_ALLOW_RUNASROOT=1',
       `./config.sh --url https://github.com/${config.githubContext.owner}/${config.githubContext.repo} --token ${githubRegistrationToken} --labels ${label}`,
-      config.input.serviceUser === 'root' ? './run.sh' : (`./svc.sh install ${config.input.serviceUser}` && './svc.sh start')
+      config.input.serviceUser === 'root' ? './run.sh' : (`./svc.sh install ${config.input.serviceUser}`, './svc.sh start')
     ];
   } else {
     return [
@@ -23,7 +23,7 @@ function buildUserDataScript(githubRegistrationToken, label) {
       'tar xzf ./actions-runner-linux-${RUNNER_ARCH}-2.299.1.tar.gz',
       'export RUNNER_ALLOW_RUNASROOT=1',
       `./config.sh --url https://github.com/${config.githubContext.owner}/${config.githubContext.repo} --token ${githubRegistrationToken} --labels ${label}`,
-      config.input.serviceUser === 'root' ? './run.sh' : (`./svc.sh install ${config.input.serviceUser}` && './svc.sh start')
+      config.input.serviceUser === 'root' ? './run.sh' : (`./svc.sh install ${config.input.serviceUser}`, './svc.sh start')
     ];
   }
 }
