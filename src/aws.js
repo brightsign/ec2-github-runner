@@ -32,6 +32,7 @@ async function startEc2Instance(label, githubRegistrationToken) {
   const ec2 = new AWS.EC2();
 
   const userData = buildUserDataScript(githubRegistrationToken, label);
+  core.info(userData);
 
   const params = {
     ImageId: config.input.ec2ImageId,
