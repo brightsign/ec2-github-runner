@@ -65,6 +65,15 @@ inputs:
     description: >-
       Directory that contains actions-runner software and scripts. E.g. /home/runner/actions-runner.
     required: false
+  run-as-service-with-user:
+    description: >-
+      Start the runner as a service using the user account. 
+      If left as default this will start the service using ./run.sh (which will run with root permissions).
+      Otherwise this will start the service using:
+        ./svc.sh install <user>
+        ./svc.sh start
+    required: false
+    default: 'root'
 outputs:
   label:
     description: >-
