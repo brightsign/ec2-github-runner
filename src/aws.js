@@ -32,7 +32,6 @@ async function startEc2Instance(label, githubRegistrationToken) {
   const ec2 = new AWS.EC2();
 
   const userData = buildUserDataScript(githubRegistrationToken, label);
-  core.info(userData);
 
   const params = {
     ImageId: config.input.ec2ImageId,
@@ -47,6 +46,7 @@ async function startEc2Instance(label, githubRegistrationToken) {
   };
 
   try {
+    core.info(`AWS EC2 instance userData: ${userData}`);
     const result = await ec2.runInstances(params).promise();
     const ec2InstanceId = result.Instances[0].InstanceId;
     core.info(`AWS EC2 instance ${ec2InstanceId} is started`);
