@@ -21,19 +21,20 @@ See [below](#example) the YAML code of the depicted workflow. <br><br>
 
 **Table of Contents**
 
-- [Use cases](#use-cases)
-  - [Access private resources in your VPC](#access-private-resources-in-your-vpc)
-  - [Customize hardware configuration](#customize-hardware-configuration)
-  - [Save costs](#save-costs)
-- [Usage](#usage)
-  - [How to start](#how-to-start)
-  - [Inputs](#inputs)
-  - [Environment variables](#environment-variables)
-  - [Outputs](#outputs)
-  - [Example](#example)
-  - [Real user examples](#real-user-examples)
-- [Self-hosted runner security with public repositories](#self-hosted-runner-security-with-public-repositories)
-- [License Summary](#license-summary)
+- [On-demand self-hosted AWS EC2 runner for GitHub Actions](#on-demand-self-hosted-aws-ec2-runner-for-github-actions)
+  - [Use cases](#use-cases)
+    - [Access private resources in your VPC](#access-private-resources-in-your-vpc)
+    - [Customize hardware configuration](#customize-hardware-configuration)
+    - [Save costs](#save-costs)
+  - [Usage](#usage)
+    - [How to start](#how-to-start)
+    - [Inputs](#inputs)
+    - [Environment variables](#environment-variables)
+    - [Outputs](#outputs)
+    - [Example](#example)
+    - [Real user examples](#real-user-examples)
+  - [Self-hosted runner security with public repositories](#self-hosted-runner-security-with-public-repositories)
+  - [License Summary](#license-summary)
 
 ## Use cases
 
@@ -192,7 +193,9 @@ Now you're ready to go!
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Required                                   | Description                                                                                                                                                                                                                                                                                                                           |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `mode`                                                                                                                                                                       | Always required.                           | Specify here which mode you want to use: <br> - `start` - to start a new runner; <br> - `stop` - to stop the previously created runner.                                                                                                                                                                                               |
-| `github-token`                                                                                                                                                               | Always required.                           | GitHub Personal Access Token with the `repo` scope assigned.                                                                                                                                                                                                                                                                          |
+| `github-token`                                                                                                                                                               | Either `github-token` or `github-app-private-key` is Always required.                           | GitHub Personal Access Token with the `repo` scope assigned.                                                                                                             |     |
+`github-app-private-key`                                                                                                                                                               | Either `github-token` or `github-app-private-key` is Always required.                                  | To avoid using a PAT token a Github App with 'repo' scope can be used (https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps)                                                                             |            
+|`github-app-id`                                                                                                                                                               | Required if `github-app-private-key` is used.                           | If using a Github App to generate the token for runner registration, then the Github App Id is needed.                                                                                                                                                                                                                                                                          |
 | `ec2-image-id`                                                                                                                                                               | Required if you use the `start` mode.      | EC2 Image Id (AMI). <br><br> The new runner will be launched from this image. <br><br> The action is compatible with Amazon Linux 2 images.                                                                                                                                                                                           |
 | `ec2-instance-type`                                                                                                                                                          | Required if you use the `start` mode.      | EC2 Instance Type.                                                                                                                                                                                                                                                                                                                    |
 | `subnet-id`                                                                                                                                                                  | Required if you use the `start` mode.      | VPC Subnet Id. <br><br> The subnet should belong to the same VPC as the specified security group.                                                                                                                                                                                                                                     |
