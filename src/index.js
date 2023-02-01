@@ -22,6 +22,10 @@ async function start() {
 
 async function stop() {
   await aws.terminateEc2Instance();
+
+  if (!config.input.githubToken) {
+    config.input.githubToken = await gh.getGithubToken();
+  }
   await gh.removeRunner();
 }
 
