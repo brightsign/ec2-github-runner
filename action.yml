@@ -83,6 +83,11 @@ inputs:
         ./svc.sh start
     required: false
     default: 'root'
+  leave-ec2-instance-running:
+    description: >-
+      When stop mode is used only deregister the runner in Github and leave the instace running instead of terminating it.
+    required: false    
+    default: false
 outputs:
   label:
     description: >-

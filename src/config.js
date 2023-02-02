@@ -17,6 +17,7 @@ class Config {
       iamRoleName: core.getInput('iam-role-name'),
       runnerHomeDir: core.getInput('runner-home-dir'),
       serviceUser: core.getInput('run-as-service-with-user'),
+      leaveEC2InstanceRunning: core.getBooleanInput('leave-ec2-instance-running')
     };
 
     const tags = JSON.parse(core.getInput('aws-resource-tags'));
