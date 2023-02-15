@@ -2,6 +2,8 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const _ = require('lodash');
 const config = require('./config');
+const jwt = require("jsonwebtoken");
+const axios = require("axios");
 
 // use the unique label to find the runner
 // as we don't have the runner's id, it's not possible to get it in any other way
@@ -15,6 +17,37 @@ async function getRunner(label) {
   } catch (error) {
     return null;
   }
+}
+
+// get GitHub Token
+async function getGithubToken() {
+  const currentTime = Math.floor(Date.now() / 1000);
+  const payload = {
+    iat: currentTime,
+    exp: currentTime + (10 * 60),
+    iss: config.input.githubAppId
+  };
+  
+  const jwtToken = jwt.sign(payload, config.input.githubAppPrivateKey, { algorithm: "RS256" });
+
+  const headers = {
+    "Accept": "application/vnd.github+json",
+    "Authorization": `Bearer ${jwtToken}`
+  };
+  let installationId;
+
+  const installationsResponse = await axios.get("https://api.github.com/app/installations", { headers });
+  const installations = installationsResponse.data;
+
+  for (const installation of installations) {
+      if (installation.account.login.toLowerCase() === config.githubContext.owner.toLowerCase()) {
+          installationId = installation.id;
+          break;
+      }
+  }    
+    
+  const accessTokensResponse = await axios.post(`https://api.github.com/app/installations/${installationId}/access_tokens`, {}, { headers });
+  return accessTokensResponse.data.token;
 }
 
 // get GitHub Registration Token for registering a self-hosted runner
@@ -84,6 +117,7 @@ async function waitForRunnerRegistered(label) {
 }
 
 module.exports = {
+  getGithubToken,
   getRegistrationToken,
   removeRunner,
   waitForRunnerRegistered,
