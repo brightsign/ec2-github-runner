@@ -14,7 +14,16 @@ inputs:
   github-token:
     description: >-
       GitHub Personal Access Token with the 'repo' scope assigned.
-    required: true
+    required: false
+  github-app-private-key:
+    description: >-
+      To avoid using a PAT token a Github App with 'repo' scope can be used.
+      https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps
+    required: false
+  github-app-id:
+    description: >-
+      If using a Github App to generate the token for runner registration, then the Github App Id is needed.
+    required: false
   ec2-image-id:
     description: >-
       EC2 Image Id (AMI). The new runner will be launched from this image.
@@ -74,6 +83,11 @@ inputs:
         ./svc.sh start
     required: false
     default: 'root'
+  leave-ec2-instance-running:
+    description: >-
+      When stop mode is used only deregister the runner in Github and leave the instace running instead of terminating it.
+    required: false    
+    default: false
 outputs:
   label:
     description: >-

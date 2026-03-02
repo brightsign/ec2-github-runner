@@ -6,6 +6,8 @@ class Config {
     this.input = {
       mode: core.getInput('mode'),
       githubToken: core.getInput('github-token'),
+      githubAppPrivateKey: core.getInput('github-app-private-key'),
+      githubAppId: core.getInput('github-app-id'),
       ec2ImageId: core.getInput('ec2-image-id'),
       ec2InstanceType: core.getInput('ec2-instance-type'),
       subnetId: core.getInput('subnet-id'),
@@ -15,6 +17,7 @@ class Config {
       iamRoleName: core.getInput('iam-role-name'),
       runnerHomeDir: core.getInput('runner-home-dir'),
       serviceUser: core.getInput('run-as-service-with-user'),
+      leaveEC2InstanceRunning: core.getBooleanInput('leave-ec2-instance-running')
     };
 
     const tags = JSON.parse(core.getInput('aws-resource-tags'));
@@ -39,8 +42,12 @@ class Config {
       throw new Error(`The 'mode' input is not specified`);
     }
 
-    if (!this.input.githubToken) {
-      throw new Error(`The 'github-token' input is not specified`);
+    if (!this.input.githubToken && !this.input.githubAppPrivateKey) {
+      throw new Error(`Both the 'github-token' and 'github-app-private-key' inputs are not specified, use one or the other`);
+    }
+
+    if (this.input.githubAppPrivateKey && !this.input.githubAppId) {
+      throw new Error(`To use 'github-app-private-key' you need to specify input 'github-app-id'`);
     }
 
     if (this.input.mode === 'start') {
